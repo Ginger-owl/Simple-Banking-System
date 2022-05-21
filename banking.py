@@ -1,4 +1,3 @@
-# Write your code here
 import random
 import sqlite3
 
@@ -25,6 +24,7 @@ class BankingSystem:
 
     @staticmethod
     def database(card=None, pin=None, balance=None) -> None:
+        """Creates a table if it is not exist and no args provided, with arguments inserts new values in the table"""
         with sqlite3.connect('card.s3db') as data:
             cur = data.cursor()
             if not card:
@@ -44,6 +44,7 @@ class BankingSystem:
 
     @staticmethod
     def check_credentials(card) -> tuple:
+        """"Returns designated values from the table as a tuple, using card(card_number) as the key"""
         with sqlite3.connect('card.s3db') as db:
             cur = db.cursor()
             cur.execute('''
@@ -87,6 +88,7 @@ class BankingSystem:
 
     @staticmethod
     def exists(card: str) -> bool:
+        """Checks whether acoount exists in the table, return True if so"""
         with sqlite3.connect('card.s3db') as db:
             cur = db.cursor()
             cur.execute('SELECT number FROM card WHERE number = (?)', (card,))
@@ -94,6 +96,7 @@ class BankingSystem:
 
     @staticmethod
     def update_balance(amount: int, card: str) -> None:
+        """Updates data about balance for designated (by card number) card"""
         with sqlite3.connect('card.s3db') as db:
             cur = db.cursor()
             cur.execute(f'''
@@ -105,6 +108,7 @@ class BankingSystem:
 
     @staticmethod
     def delete_account(card: str) -> None:
+        """Deletes all the data direectly related to designated card"""
         with sqlite3.connect('card.s3db') as db:
             cur = db.cursor()
             cur.execute(f'''
@@ -114,6 +118,7 @@ class BankingSystem:
             db.commit()
 
     def transfer_money(self, card_from: str, card_to: str, amount: int) -> None:
+        """Updates balance data for sender and receiver cards on the specified amount""" 
         with sqlite3.connect('card.s3db') as db:
             cur = db.cursor()
             cur.execute(f"""
@@ -131,6 +136,7 @@ class BankingSystem:
             print("Money has been successfully transferred!")
 
     def transfer_menu(self, card_from: str, card_to: str) -> None:
+        """Menu for transferring money, checks whether it is possible to make transfer""""
         if card_to == card_from:
             print("You can't transfer money to the same account!")
             return
